@@ -4,8 +4,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from 'components/Header';
 import HomePage from 'pages/Homepage/HomePage';
-import Product from 'pages/product';
-import Order from 'pages/product/Order';
+import Order from 'pages/product';
 import Employee from 'pages/employee';
 import Sell from 'pages/sell/Sell';
 import Asset from 'pages/asstes';
@@ -24,7 +23,6 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/product" element={<Product />} />
         <Route path="/product/0" element={<Order />} />
         <Route path="/sell" element={<Sell />} />
         <Route path="/employee" element={<Employee />} />

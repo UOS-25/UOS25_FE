@@ -24,7 +24,7 @@ const HomePage = () => {
   // 버튼 클릭때마다 post 필요
   return (
     <ButtonGrid>
-      {/* <CustomButton onClick={() => handleClick('/product')}>제품 관리</CustomButton> */}
+      <Button onClick={() => handleClick('/product/0')}>제품 관리</Button>
       <button
         type="button"
         className="btn btn-outline-primary"

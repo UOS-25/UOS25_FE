@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
-
+import { useParams } from 'react-router-dom';
 interface depositInfo {
   amount: number;
 

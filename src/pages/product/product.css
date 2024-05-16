@@ -1,0 +1,39 @@
+.app {
+  display: flex;
+}
+
+.product-list-container {
+  width: 50%;
+  border: 1px solid #ccc;
+  height: 400px;
+  overflow-y: scroll;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+}
+
+.product-item input {
+  margin-right: 10px;
+}
+
+.selected-products-container {
+  width: 50%;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.selected-product {
+  margin-bottom: 20px;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-control button {
+  width: 30px;
+  height: 30px;
+}
