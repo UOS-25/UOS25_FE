@@ -1,25 +1,41 @@
 import React from 'react';
 import styled from 'styled-components';
 import Menu from 'components/Header/Menu';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
 import { useState } from 'react';
 
 interface Product {
   barcode: string;
+  item: string;
   quantity: number;
+  price: number;
 }
 
+const testData: Product[] = [{ barcode: '123', item: '삼김', quantity: 1, price: 3300 }];
 const Sell = () => {
   const items = ['판매', '환불', '영수증 조회'];
   const [products, setProducts] = useState<Product[]>([]);
+  const [itemInput, setItemInput] = useState<string>('');
   const [barcodeInput, setBarcodeInput] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(1);
+  const [price, setPrice] = useState<number>(0);
 
   const handleBarcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBarcodeInput(e.target.value);
+    const barcode = e.target.value;
+    setBarcodeInput(barcode);
+    const foundProduct = products.find((product) => product.barcode === barcode);
+    if (foundProduct) {
+      setItemInput(foundProduct.item);
+    } else {
+      setItemInput(null);
+    }
   };
 
   const handleAddProduct = () => {
-    const newProduct: Product = { barcode: barcodeInput, quantity };
+    const newProduct = testData.find((product) => product.barcode === barcodeInput);
     setProducts([...products, newProduct]);
     setBarcodeInput('');
     setQuantity(1);
@@ -74,24 +90,26 @@ const Sell = () => {
       <ProductContainer>
         <ProductList style={{ borderBottom: '1px solid lightgrey' }}>
           <div>바코드</div>
+          <div>제품</div>
           <div>수량</div>
-          <div>수량 조정</div>
+          <div>가격</div>
           <div>삭제</div>
         </ProductList>
         <ProductLists>
           {products.map((product, index) => (
             <ProductItem key={index}>
               <Barcode>{product.barcode}</Barcode>
-              <Quantity>{product.quantity}</Quantity>
+              <div>{product.item}</div>
               <QuantityControl>
                 <QuantityButton onClick={() => handleQuantityChange(index, product.quantity - 1)}>
                   -
                 </QuantityButton>
-                <span style={{ margin: '0 5px' }}></span>
+                <Quantity>{product.quantity}</Quantity>
                 <QuantityButton onClick={() => handleQuantityChange(index, product.quantity + 1)}>
                   +
                 </QuantityButton>
               </QuantityControl>
+              <div>{product.price}</div>
               <RemoveButton onClick={() => handleRemoveProduct(index)}>삭제</RemoveButton>
             </ProductItem>
           ))}
@@ -106,8 +124,11 @@ export default Sell;
 const ProductContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 700px;
+  width: 500px;
   margin-left: 30px;
+  max-height: 605px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
 `;
 
 const InputContainer = styled.div`
@@ -159,14 +180,14 @@ const ProductList = styled.div`
   display: flex;
   justify-content: space-between; // 마찬가지로 각 항목이 공간을 균등하게 차지하도록 조정
   align-items: center;
-  width: 80%;
+  width: 100%;
   padding: 10px;
 `;
 const ProductLists = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%;
+  width: 100%;
 `;
 
 const ProductItem = styled.div`
@@ -250,4 +271,13 @@ const PaymentContainer = styled.div`
   grid-gap: 10px; // 그리드 사이 간격
   width: 100%; // 부모 컨테이너의 너비에 맞게 조정
   max-width: 300px; // 최대 너비 설정
+`;
+const ItemBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1; // 균등한 크기
+  margin: 0 10px; // 좌우 마진 설정
+}
 `;
