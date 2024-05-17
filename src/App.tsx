@@ -17,6 +17,7 @@ import WithDraw from 'pages/etc/atm/WithDraw';
 import DepositToMe from 'pages/etc/atm/DepositToMe';
 import ElectricTax from 'pages/etc/utility/ElectricTax';
 import GasTax from 'pages/etc/utility/GasTax';
+import EventPost from 'pages/events/EventPost';
 function App() {
   return (
     <Router>
@@ -36,6 +37,7 @@ function App() {
         <Route path="/etc/Utility/1" element={<ElectricTax />} />
         <Route path="/etc/Utility/2" element={<GasTax />} />
         <Route path="/etc/Lottery" element={<Lottery />} />
+        <Route path="/event/0" element={<EventPost />} />
       </Routes>
     </Router>
   );

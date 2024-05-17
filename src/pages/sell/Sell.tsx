@@ -14,14 +14,38 @@ interface Product {
   price: number;
 }
 
-const testData: Product[] = [{ barcode: '123', item: '삼김', quantity: 1, price: 3300 }];
+interface parsingProduct {
+  barcode: string;
+  item: string;
+  quantity: number;
+  price: number;
+  gender: string;
+  age: string;
+}
+
+interface buyProduct {
+  barcode: string;
+  quantity: number;
+  gender: string;
+  age: string;
+}
+
+const testData: Product[] = [
+  { barcode: '123', item: '삼김', quantity: 1, price: 3300 },
+  { barcode: '124', item: '삼김a', quantity: 1, price: 3300 },
+  { barcode: '125', item: '삼김b', quantity: 1, price: 3300 },
+  { barcode: '125125', item: '삼sssss김b', quantity: 1, price: 3300 },
+];
 const Sell = () => {
   const items = ['판매', '환불', '영수증 조회'];
   const [products, setProducts] = useState<Product[]>([]);
+  const [buyProducts, setBuyProducts] = useState<buyProduct[]>([]);
+  const [parsingProducts, setParsingProducts] = useState<parsingProduct[]>([]);
   const [itemInput, setItemInput] = useState<string>('');
   const [barcodeInput, setBarcodeInput] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(1);
-  const [price, setPrice] = useState<number>(0);
+  const [gender, setGender] = useState('');
+  const [age, setAge] = useState('');
 
   const handleBarcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const barcode = e.target.value;
@@ -34,9 +58,34 @@ const Sell = () => {
     }
   };
 
+  const handleGenderChange = (event) => {
+    setGender(event.target.value);
+  };
+
+  const handleAgeChange = (event) => {
+    setAge(event.target.value);
+  };
+
   const handleAddProduct = () => {
     const newProduct = testData.find((product) => product.barcode === barcodeInput);
     setProducts([...products, newProduct]);
+    const parsingProduct: parsingProduct = {
+      ...newProduct,
+      gender: gender,
+      age: age,
+    };
+
+    const buyProduct: buyProduct = {
+      barcode: parsingProduct.barcode,
+      quantity: quantity,
+      gender: parsingProduct.gender,
+      age: parsingProduct.age,
+    };
+    setParsingProducts([...parsingProducts, parsingProduct]);
+    const updatedBuyProducts = [...buyProducts, buyProduct];
+    setBuyProducts(updatedBuyProducts);
+    // 6. buyProduct 객체를 buyProducts 배열에 추가
+    console.log(buyProducts);
     setBarcodeInput('');
     setQuantity(1);
   };
@@ -86,12 +135,38 @@ const Sell = () => {
           <KakaoPayButton>카카오페이</KakaoPayButton>
           <CashPaymentButton>현금 결제</CashPaymentButton>
         </PaymentContainer>
+        <BuyerContainer>
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="formGridCity">
+              <Form.Label>성별</Form.Label>
+              <Form.Select value={gender} onChange={handleGenderChange}>
+                <option>선택</option>
+                <option>남</option>
+                <option>여</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group as={Col} controlId="formGridState">
+              <Form.Label>연령대</Form.Label>
+              <Form.Select value={age} onChange={handleAgeChange}>
+                <option>선택</option>
+                <option>10대</option>
+                <option>20대</option>
+                <option>30대</option>
+                <option>40대</option>
+                <option>50대</option>
+                <option>60대</option>
+                <option>70대 이상</option>
+              </Form.Select>
+            </Form.Group>
+          </Row>
+        </BuyerContainer>
       </InputContainer>
       <ProductContainer>
         <ProductList style={{ borderBottom: '1px solid lightgrey' }}>
           <div>바코드</div>
-          <div>제품</div>
-          <div>수량</div>
+          <div style={{ paddingRight: '50px' }}>제품</div>
+          <div style={{ paddingRight: '70px' }}>수량</div>
           <div>가격</div>
           <div>삭제</div>
         </ProductList>
@@ -99,7 +174,9 @@ const Sell = () => {
           {products.map((product, index) => (
             <ProductItem key={index}>
               <Barcode>{product.barcode}</Barcode>
-              <div>{product.item}</div>
+              <div style={{ width: '10%', justifyContent: 'center', margin: '5px' }}>
+                {product.item}
+              </div>
               <QuantityControl>
                 <QuantityButton onClick={() => handleQuantityChange(index, product.quantity - 1)}>
                   -
@@ -124,9 +201,9 @@ export default Sell;
 const ProductContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 500px;
-  margin-left: 30px;
+  width: 700px;
   max-height: 605px;
+  margin-right: 5px;
   overflow-y: auto;
   border: 1px solid #ccc;
 `;
@@ -207,7 +284,7 @@ const BarcodeQuantityWrapper = styled.div`
 const Barcode = styled.span`
   padding: 5px 10px;
   border-radius: 5px 0 0 5px;
-  max-width: 100px; /* 최대 너비 설정 */
+  max-width: 50px; /* 최대 너비 설정 */
   overflow: hidden; /* 넘치는 내용 숨김 */
   text-overflow: ellipsis; /* 넘치는 텍스트를 '...'로 표시 */
   white-space: nowrap; /* 텍스트가 한 줄로 나오도록 설정 */
@@ -272,12 +349,8 @@ const PaymentContainer = styled.div`
   width: 100%; // 부모 컨테이너의 너비에 맞게 조정
   max-width: 300px; // 최대 너비 설정
 `;
-const ItemBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex: 1; // 균등한 크기
-  margin: 0 10px; // 좌우 마진 설정
-}
+
+const BuyerContainer = styled.div`
+  justify-content: center;
+  margin-top: 30px;
 `;
