@@ -2,10 +2,9 @@ import Menu from 'components/Header/Menu';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import { ChangeEventHandler } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const items = ['이벤트 등록', '진행중인 이벤트'];
 
@@ -16,6 +15,8 @@ const EventPost = () => {
   const [discount, setDiscount] = useState<boolean>(false);
   const [discountRate, setDiscountRate] = useState<number>(0);
   const [selectedCinema, setSelectedCinema] = useState<string>('');
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const handleBarcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBarcodeInput(parseInt(e.target.value));
@@ -43,6 +44,14 @@ const EventPost = () => {
         break;
     }
   };
+  const handleStartDateChange = (date: Date | null) => {
+    setStartDate(date);
+  };
+
+  const handleEndDateChange = (date: Date | null) => {
+    setEndDate(date);
+  };
+
   const handleDiscountRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDiscountRate(parseInt(e.target.value));
   };
@@ -59,9 +68,11 @@ const EventPost = () => {
       eventType: onePlusone ? '1+1' : ticket ? '영화권 증정' : '가격 할인',
       discountRate: discount ? discountRate : null,
       cinema: ticket ? selectedCinema : null,
+      startDate: startDate || null,
+      endDate: endDate || null,
     };
 
-    console.log(eventData);
+    console.log(eventData); // console
 
     // try {
     //   await axios.post('/api/events', eventData);
@@ -132,6 +143,25 @@ const EventPost = () => {
               />
             </Form.Group>
           )}
+          <Form.Group className="mb-3">
+            <Form.Label>시작 날짜</Form.Label>
+            <DatePicker
+              selected={startDate}
+              onChange={handleStartDateChange}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="시작 날짜를 선택하세요"
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>종료 날짜</Form.Label>
+            <DatePicker
+              selected={endDate}
+              onChange={handleEndDateChange}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="종료 날짜를 선택하세요"
+            />
+          </Form.Group>
           <Button variant="primary" type="submit">
             이벤트 등록
           </Button>
