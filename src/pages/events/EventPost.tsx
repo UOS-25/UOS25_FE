@@ -9,17 +9,16 @@ import 'react-datepicker/dist/react-datepicker.css';
 const items = ['이벤트 등록', '진행중인 이벤트'];
 
 const EventPost = () => {
-  const [barcodeInput, setBarcodeInput] = useState<number>(0);
+  const [barcodeInput, setBarcodeInput] = useState<string>('');
   const [onePlusone, setOnePlusOne] = useState<boolean>(false);
   const [ticket, setTicket] = useState<boolean>(false);
   const [discount, setDiscount] = useState<boolean>(false);
   const [discountRate, setDiscountRate] = useState<number>(0);
-  const [selectedCinema, setSelectedCinema] = useState<string>('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   const handleBarcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBarcodeInput(parseInt(e.target.value));
+    setBarcodeInput(e.target.value);
   };
 
   const handleCheckboxChange = (event) => {
@@ -56,18 +55,13 @@ const EventPost = () => {
     setDiscountRate(parseInt(e.target.value));
   };
 
-  const handleCinemaChange = (e) => {
-    setSelectedCinema(e.target.value);
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const eventData = {
       barcode: barcodeInput,
-      eventType: onePlusone ? '1+1' : ticket ? '영화권 증정' : '가격 할인',
+      eventType: onePlusone ? 'ONE_PLUS_ONE' : ticket ? 'MOVIE_GIVEAWAY' : 'DISCOUNT',
       discountRate: discount ? discountRate : null,
-      cinema: ticket ? selectedCinema : null,
       startDate: startDate || null,
       endDate: endDate || null,
     };
@@ -122,17 +116,7 @@ const EventPost = () => {
               onChange={handleCheckboxChange}
             />
           </Form.Group>
-          {ticket && (
-            <Form.Group className="mb-3">
-              <Form.Label>영화관 선택</Form.Label>
-              <Form.Control as="select" value={selectedCinema} onChange={handleCinemaChange}>
-                <option value="">선택하세요</option>
-                <option value="롯데시네마">롯데시네마</option>
-                <option value="메가박스">메가박스</option>
-                <option value="CGV">CGV</option>
-              </Form.Control>
-            </Form.Group>
-          )}
+
           {discount && (
             <Form.Group className="mb-3">
               <Form.Label>할인율 입력</Form.Label>

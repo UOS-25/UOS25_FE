@@ -18,11 +18,17 @@ import DepositToMe from 'pages/etc/atm/DepositToMe';
 import ElectricTax from 'pages/etc/utility/ElectricTax';
 import GasTax from 'pages/etc/utility/GasTax';
 import EventPost from 'pages/events/EventPost';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import LoginPage from 'pages/login/Login';
+import ProtectedRoute from 'ProtectedRoute';
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   return (
     <Router>
       <Header />
       <Routes>
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/product/0" element={<Order />} />
         <Route path="/sell" element={<Sell />} />
