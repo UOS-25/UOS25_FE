@@ -6,33 +6,41 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Menu from 'components/Header/Menu';
+import axiosInstance from "../login/LoginAxios";
 interface Product {
-  address: string;
-  senderPhone: number;
-  recipientPhone: number;
+  fromAddress: string;
+  toAddress: string;
+  toPhoneNumber: string;
+  fromPhoneNumber: string;
   weight: number;
-  senderName: string;
-  recipientName: string;
+  goods: string
+  // senderName: string;
+  // recipientName: string;
 }
+
 
 const Post = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [addressInput, setAddressInput] = useState<string>('');
-  const [senderPhoneInput, setSenderPhoneInput] = useState<number>(0);
-  const [recipientPhoneInput, setRecipientPhoneInput] = useState<number>(0);
+  const [fromAddressInput, setFromAddressInput] = useState<string>('');
+  const [toAddressInput, setToAddressInput] = useState<string>('');
+  const [toPhoneNumberInput, settoPhoneNumberInput] = useState<string>('');
+  const [fromPhoneNumberInput, setfromPhoneNumberInput] = useState<string>('');
   const [weightInput, setWeightInput] = useState<number>(0);
   const [senderNameInput, setSenderNameInput] = useState<string>('');
   const [recipientNameInput, setRecipientNameInput] = useState<string>('');
 
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddressInput(e.target.value);
+  const handleFromAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFromAddressInput(e.target.value);
   };
-  const handleSenderPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSenderPhoneInput(parseInt(e.target.value));
+  const handleToAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFromAddressInput(e.target.value);
+  };
+  const handletoPhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    settoPhoneNumberInput((e.target.value));
     console.log(e.target.value);
   };
-  const handlerRecipientPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRecipientPhoneInput(parseInt(e.target.value));
+  const handlerfromPhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setfromPhoneNumberInput((e.target.value));
   };
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWeightInput(parseInt(e.target.value));
@@ -46,45 +54,32 @@ const Post = () => {
   // useEffect(() => {
   //   console.log('products:', products);
   // }, [products]);
-  const handleAddProduct = () => {
-    const newProduct: Product = {
-      address: addressInput,
-      senderPhone: senderPhoneInput,
-      recipientPhone: recipientPhoneInput,
-      weight: weightInput,
-      senderName: senderNameInput,
-      recipientName: recipientNameInput,
-    };
-    setProducts([...products, newProduct]);
+  const handleAddProduct = async () => {
+    try {
+      const newProduct: Product = {
+        fromAddress: fromAddressInput,
+        toAddress: toAddressInput,
+        toPhoneNumber: toPhoneNumberInput,
+        fromPhoneNumber: fromPhoneNumberInput,
+        weight: weightInput,
+        goods: 'product'
+        // senderName: senderNameInput,
+        // recipientName: recipientNameInput,
+      };
+      const response = await axiosInstance.post('/parcel', newProduct)
+      console.log(response.data)
+    }catch(error) {
+      console.log(error)
+    }
+
+    // setProducts([...products, newProduct]);
     console.log('products:', products);
-    setAddressInput('');
-    setSenderPhoneInput(0);
-    setRecipientPhoneInput(0);
+    setFromAddressInput('');
+    settoPhoneNumberInput('');
+    setfromPhoneNumberInput('');
     setWeightInput(0);
     setSenderNameInput('');
     setRecipientNameInput('');
-
-    // fetch('/api/products', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(newProduct),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log('Success:', data);
-    //     setProducts([...products, newProduct]);
-    //     setAddressInput('');
-    //     setSenderPhoneInput(0);
-    //     setRecipientPhoneInput(0);
-    //     setWeightInput(0);
-    //     setSenderNameInput('');
-    //     setRecipientNameInput('');
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error:', error);
-    //   });
   };
 
   const items = ['택배 발송', '택배 조회'];
@@ -107,14 +102,14 @@ const Post = () => {
             <Form.Control
               type="text"
               placeholder="0100000000"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlerRecipientPhoneChange(e)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlerfromPhoneNumberChange(e)}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="c">
             <Form.Label>받는 이 주소</Form.Label>
             <Form.Control
               placeholder="도로명주소 입력 바랍니다."
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleAddressChange(e)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFromAddressChange(e)}
             />
           </Form.Group>
           <Form.Group as={Col} controlId="weight">
@@ -141,14 +136,16 @@ const Post = () => {
             <Form.Control
               type="text"
               placeholder="0100000000"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSenderPhoneChange(e)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handletoPhoneNumberChange(e)}
             />
           </Form.Group>
         </Row>
 
         <Form.Group className="mb-3" controlId="f">
           <Form.Label>보내는 이 주소</Form.Label>
-          <Form.Control placeholder="도로명주소 입력 바랍니다." />
+          <Form.Control
+            placeholder="도로명주소 입력 바랍니다."
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleToAddressChange(e)} />
         </Form.Group>
         <Button variant="primary" type="submit" onClick={handleAddProduct}>
           접수

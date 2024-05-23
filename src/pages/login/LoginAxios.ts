@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
-  baseURL: '기본 url 추가',
+  baseURL: 'http://localhost:8080/api/v1',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -14,8 +14,10 @@ axiosInstance.interceptors.request.use(
   (config) => {
     // 요청 전에 토큰을 헤더에 추가
     const accessToken = localStorage.getItem('accessToken');
+    console.log('accessToken', accessToken);
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
+      console.log(config);
     }
     return config;
   },

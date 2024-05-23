@@ -4,18 +4,40 @@ import styled from 'styled-components';
 import './product.css';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import axiosInstance from 'pages/login/LoginAxios';
 interface product {
   id: number;
   name: string;
-  barcode: number;
+  barcode: string;
   checked: boolean;
   count: number;
 }
 
+const handleSingup = async () => {
+  try {
+    // const token = localStorage.getItem('accessToken');
+    // console.log(token);
+    const response = await axiosInstance.post('/orders/save', {
+      orderNumber: '4',
+      productsMap: {
+        '123': 2,
+        '124': 3,
+        '125': 1
+      },
+    });
+    console.log(response.data);
+    // handleClick('/login');
+  } catch (error) {
+    console.log(error);
+    // setCode('');
+    // setLocation('');
+  }
+};
+
 const balItems: product[] = [];
 const initialItems: product[] = [
-  { id: 0, name: '물품1', barcode: 123123, checked: false, count: 0 },
-  { id: 1, name: '물품2', barcode: 123213, checked: false, count: 0 },
+  { id: 0, name: '물품1', barcode: '123123', checked: false, count: 0 },
+  { id: 1, name: '물품2', barcode: '123213', checked: false, count: 0 },
 ];
 const Product = () => {
   const [products, setProducts] = useState<product[]>(balItems);
@@ -90,7 +112,7 @@ const Product = () => {
         ))}
       </ProductsContainer>
       <ButtonContainer>
-        <Button variant="primary" size="lg">
+        <Button variant="primary" onClick={handleSingup} size="lg">
           발주
         </Button>{' '}
         <Button variant="secondary" type="submit" size="lg">

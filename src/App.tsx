@@ -18,24 +18,29 @@ import DepositToMe from 'pages/etc/atm/DepositToMe';
 import ElectricTax from 'pages/etc/utility/ElectricTax';
 import GasTax from 'pages/etc/utility/GasTax';
 import EventPost from 'pages/events/EventPost';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import LoginPage from 'pages/login/Login';
-import ProtectedRoute from 'ProtectedRoute';
+import OrderList from 'pages/product/OrderList';
+import OrderListDetail from "./pages/product/OrderListDetail";
+import Signup from 'pages/login/Signup';
+import PostList from "./pages/etc/utility/PostList";
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   return (
     <Router>
       <Header />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/login/signup" element={<Signup />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/product/0" element={<Order />} />
+        <Route path="/product/1" element={<OrderList />} />
+        <Route path="/product/1/:orderId" element={<OrderListDetail />} />
         <Route path="/sell" element={<Sell />} />
         <Route path="/employee" element={<Employee />} />
         <Route path="/asset" element={<Asset />} />
         <Route path="/etc" element={<Etc />} />
         <Route path="/etc/Post/0" element={<Post />} />
+        <Route path="/etc/Post/1" element={<PostList />} />
+        <Route path="/etc/Post/1/:postId" element={<PostList />} />
         <Route path="/etc/ATM/0" element={<ATM />} />
         <Route path="/etc/ATM/1" element={<WithDraw />} />
         <Route path="/etc/ATM/2" element={<DepositToMe />} />
