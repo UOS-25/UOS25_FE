@@ -6,7 +6,6 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-const items = ['직원 현황', '직원 등록'];
 
 interface EmployeeInfo {
   name: string;
@@ -18,6 +17,7 @@ interface EmployeeInfo {
 }
 
 const EmployeePost = () => {
+  const items = ['직원 현황', '직원 등록'];
   const [employeeInfo, setEmployeeInfo] = useState<EmployeeInfo[]>([]);
   const [nameInput, setNameInput] = useState<string>('');
   const [genderInput, setGenderInput] = useState<string>('');

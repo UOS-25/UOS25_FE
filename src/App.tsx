@@ -25,6 +25,7 @@ import Signup from 'pages/login/Signup';
 import PostList from './pages/etc/utility/PostList';
 import PostListDetail from './pages/etc/utility/PostListDetail';
 import EmployeePost from 'pages/employee/EmployeePost';
+import EmployeeDetail from 'pages/employee/EmployeDetail';
 function App() {
   return (
     <Router>
@@ -39,6 +40,7 @@ function App() {
         <Route path="/sell" element={<Sell />} />
         <Route path="/employee/0" element={<Employee />} />
         <Route path="/employee/1" element={<EmployeePost />} />
+        <Route path="/employee/0/:employeeId" element={<EmployeeDetail />} />
         <Route path="/asset" element={<Asset />} />
         <Route path="/etc" element={<Etc />} />
         <Route path="/etc/Post/0" element={<Post />} />
