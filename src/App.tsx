@@ -20,9 +20,11 @@ import GasTax from 'pages/etc/utility/GasTax';
 import EventPost from 'pages/events/EventPost';
 import LoginPage from 'pages/login/Login';
 import OrderList from 'pages/product/OrderList';
-import OrderListDetail from "./pages/product/OrderListDetail";
+import OrderListDetail from './pages/product/OrderListDetail';
 import Signup from 'pages/login/Signup';
-import PostList from "./pages/etc/utility/PostList";
+import PostList from './pages/etc/utility/PostList';
+import PostListDetail from './pages/etc/utility/PostListDetail';
+import EmployeePost from 'pages/employee/EmployeePost';
 function App() {
   return (
     <Router>
@@ -35,12 +37,13 @@ function App() {
         <Route path="/product/1" element={<OrderList />} />
         <Route path="/product/1/:orderId" element={<OrderListDetail />} />
         <Route path="/sell" element={<Sell />} />
-        <Route path="/employee" element={<Employee />} />
+        <Route path="/employee/0" element={<Employee />} />
+        <Route path="/employee/1" element={<EmployeePost />} />
         <Route path="/asset" element={<Asset />} />
         <Route path="/etc" element={<Etc />} />
         <Route path="/etc/Post/0" element={<Post />} />
         <Route path="/etc/Post/1" element={<PostList />} />
-        <Route path="/etc/Post/1/:postId" element={<PostList />} />
+        <Route path="/etc/Post/1/:parcelId" element={<PostListDetail />} />
         <Route path="/etc/ATM/0" element={<ATM />} />
         <Route path="/etc/ATM/1" element={<WithDraw />} />
         <Route path="/etc/ATM/2" element={<DepositToMe />} />

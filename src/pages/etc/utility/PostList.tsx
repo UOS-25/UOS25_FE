@@ -5,27 +5,28 @@ import axiosInstance from "../../login/LoginAxios";
 import {Link} from "react-router-dom";
 
 
-interface ParcelInfo {
-  parcelId: number;
-  fromPhoneNumber: string;
+interface parcelInfo {
+  "parcelId": 0,
+  "fromAddress": "string",
+  "toAddress": "string",
+  "fromPhoneNumber": "string",
+  "toPhoneNumber": "string",
+  "weight": 0,
+  "goods": "string"
 }
 
 
 
 const PostList = () => {
   const menuItems = ['택배 발송', '택배 조회'];
-  const [parcelData, setParcelData] = useState<ParcelInfo[]>([]);
+  const [parcelData, setParcelData] = useState<parcelInfo[]>([]);
+  const [test, setTest] = useState<parcelInfo>();
   useEffect (() => {
     const getParcel = async () => {
       try{
         const response = await axiosInstance.get(`/parcel`);
         console.log(response.data);
-        // const dataArray = Array.isArray(response.data) ? response.data : response.data.data;
-        const filteredData: ParcelInfo[] = Object.values(response.data).map(parcel => ({
-          parcelId: (parcel as { parcelId: number }).parcelId,
-          fromPhoneNumber: (parcel as { fromPhoneNumber: string }).fromPhoneNumber,
-        }));
-      setParcelData(prevData => [...prevData, ...filteredData]);
+      setParcelData(response.data.responses);
       } catch(error) {
         console.log(error);
       }
@@ -36,9 +37,9 @@ const PostList = () => {
    <Container>
      <Menu items={menuItems} page={'etc/Post'}/>
      <ul>
-       {parcelData.map((item: ParcelInfo) => (
+       {parcelData.map((item) => (
            <li key={item.parcelId} style={{marginLeft: '250px'}}>
-             <Link to={`/etc/Post/1${item.parcelId}`}>
+             <Link to={`/etc/Post/1/${item.parcelId}`}>
                {item.parcelId}
              </Link>
            </li>

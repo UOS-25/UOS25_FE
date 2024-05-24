@@ -36,7 +36,7 @@ const HomePage = () => {
         자산 관리
       </Button>
       <Button onClick={() => handleClick('/event/0')}>이벤트 관리</Button>
-      <Button onClick={() => handleClick('/employee')}>직원 관리</Button>
+      <Button onClick={() => handleClick('/employee/0')}>직원 관리</Button>
       <Button onClick={() => handleClick('/etc')}>기타 관리</Button>
     </ButtonGrid>
   );

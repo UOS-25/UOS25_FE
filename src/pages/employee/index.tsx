@@ -1,3 +1,4 @@
+import Menu from 'components/Header/Menu';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 interface Employee {
@@ -14,6 +15,8 @@ const mockEmployeeData: Employee[] = [
   // 추가 직원 데이터
 ];
 
+const items = ['직원 현황', '직원 등록'];
+
 function App() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   useEffect(() => {
@@ -28,30 +31,39 @@ function App() {
   };
 
   return (
-    <Container>
-      <EmployeeRow style={{ borderBottom: '1px solid lightgrey' }}>
-        <div>이름</div>
-        <div>직급</div>
-        <div>근무 상황</div>
-        <div>급여</div>
-        <div>해고</div>
-      </EmployeeRow>
-      {employees.map((employee) => (
-        <EmployeeRow key={employee.id}>
-          <div>{employee.name}</div>
-          <div>{employee.position}</div>
-          <Button onClick={() => alert('작성 페이지로 이동')}>작성</Button>
-          <div>{employee.salary}</div>
-          <Button onClick={() => employee.id}>해고</Button>
+    <BodyContainer>
+      <Menu items={items} page={'employee'} />
+      <Container>
+        <EmployeeRow style={{ borderBottom: '1px solid lightgrey' }}>
+          <div>이름</div>
+          <div>직급</div>
+          <div>근무 상황</div>
+          <div>급여</div>
+          <div>해고</div>
         </EmployeeRow>
-      ))}
-    </Container>
+        {employees.map((employee) => (
+          <EmployeeRow key={employee.id}>
+            <div>{employee.name}</div>
+            <div>{employee.position}</div>
+            <Button onClick={() => alert('작성 페이지로 이동')}>작성</Button>
+            <div>{employee.salary}</div>
+            <Button onClick={() => employee.id}>해고</Button>
+          </EmployeeRow>
+        ))}
+      </Container>
+    </BodyContainer>
   );
 }
 
 export default App;
 
+const BodyContainer = styled.div`
+  // display: flex;
+  // flex-direction: row;
+`;
+
 const Container = styled.div`
+  margin-left: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;

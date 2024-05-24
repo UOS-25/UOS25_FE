@@ -6,18 +6,17 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Menu from 'components/Header/Menu';
-import axiosInstance from "../login/LoginAxios";
+import axiosInstance from '../login/LoginAxios';
 interface Product {
   fromAddress: string;
   toAddress: string;
   toPhoneNumber: string;
   fromPhoneNumber: string;
   weight: number;
-  goods: string
+  goods: string;
   // senderName: string;
   // recipientName: string;
 }
-
 
 const Post = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -36,11 +35,11 @@ const Post = () => {
     setFromAddressInput(e.target.value);
   };
   const handletoPhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    settoPhoneNumberInput((e.target.value));
+    settoPhoneNumberInput(e.target.value);
     console.log(e.target.value);
   };
   const handlerfromPhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setfromPhoneNumberInput((e.target.value));
+    setfromPhoneNumberInput(e.target.value);
   };
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWeightInput(parseInt(e.target.value));
@@ -62,14 +61,14 @@ const Post = () => {
         toPhoneNumber: toPhoneNumberInput,
         fromPhoneNumber: fromPhoneNumberInput,
         weight: weightInput,
-        goods: 'product'
+        goods: 'product',
         // senderName: senderNameInput,
         // recipientName: recipientNameInput,
       };
-      const response = await axiosInstance.post('/parcel', newProduct)
-      console.log(response.data)
-    }catch(error) {
-      console.log(error)
+      const response = await axiosInstance.post('/parcel', newProduct);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
     }
 
     // setProducts([...products, newProduct]);
@@ -145,7 +144,8 @@ const Post = () => {
           <Form.Label>보내는 이 주소</Form.Label>
           <Form.Control
             placeholder="도로명주소 입력 바랍니다."
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleToAddressChange(e)} />
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleToAddressChange(e)}
+          />
         </Form.Group>
         <Button variant="primary" type="submit" onClick={handleAddProduct}>
           접수
