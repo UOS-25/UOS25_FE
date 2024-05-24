@@ -114,7 +114,7 @@ const EmployeePost = () => {
             <Form.Label>경력</Form.Label>
             <Form.Control
               type="text"
-              placeholder="신규 직원의 경력을 입력해주세요."
+              placeholder="신규 직원의 경력을 개월수로 입력해주세요."
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleCareerChange(e)}
             />
           </Form.Group>

@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 interface EmployeeInfo {
   employeeId: number;
   name: string;
+  title: string;
   gender: string;
   officeHours: string;
   career: string;
@@ -22,6 +23,7 @@ const EmployeeListDetail = () => {
   const [employee, setEmployee] = useState<EmployeeInfo>({
     employeeId: 0,
     name: '',
+    title: '',
     gender: '',
     officeHours: '',
     career: '',
@@ -52,8 +54,12 @@ const EmployeeListDetail = () => {
   };
 
   const handleUpdateEmployee = async () => {
+    const { employeeId, ...updatedEmployeeData } = employee;
     try {
-      const response = await axiosInstance.patch(`/hr/employees/${employeeId}`);
+      const response = await axiosInstance.patch(
+        `/hr/employees/${employeeId}`,
+        updatedEmployeeData,
+      );
       console.log(response.data);
       alert('수정이 완료되었습니다.');
     } catch (error) {
@@ -61,9 +67,8 @@ const EmployeeListDetail = () => {
       alert('수정 중 오류가 발생했습니다.');
     }
   };
-
   const handleDeleteEmployee = async () => {
-    const confirmDelete = window.confirm('정말로 이 직원을 해고하시겠습니까?');
+    const confirmDelete = window.confirm('이 직원을 해고하시겠습니까?');
     if (confirmDelete) {
       try {
         const response = await axiosInstance.delete(`/hr/employees/${employeeId}`);
@@ -78,7 +83,7 @@ const EmployeeListDetail = () => {
   };
 
   const handlePaySalary = async () => {
-    const confirmPay = window.confirm('정말로 급여를 지급하시겠습니까?');
+    const confirmPay = window.confirm('급여를 지급하시겠습니까?');
     if (confirmPay) {
       try {
         const response = await axiosInstance.post(`/hr/employees/${employeeId}/payment`);
@@ -125,6 +130,10 @@ const EmployeeListDetail = () => {
       <InformationRow>
         시급
         <Input name="salary" value={employee.salary} onChange={handleInputChange} type="number" />
+      </InformationRow>
+      <InformationRow>
+        직급
+        <Input name="salary" value={employee.title} onChange={handleInputChange} type="number" />
       </InformationRow>
       <ButtonContainer>
         <Button variant="primary" onClick={handleUpdateEmployee} size="sm">
