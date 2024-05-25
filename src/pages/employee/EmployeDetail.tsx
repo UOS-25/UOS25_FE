@@ -133,7 +133,7 @@ const EmployeeListDetail = () => {
       </InformationRow>
       <InformationRow>
         직급
-        <Input name="salary" value={employee.title} onChange={handleInputChange} type="number" />
+        <Input name="salary" value={employee.title} onChange={handleInputChange} />
       </InformationRow>
       <ButtonContainer>
         <Button variant="primary" onClick={handleUpdateEmployee} size="sm">

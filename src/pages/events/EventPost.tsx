@@ -5,9 +5,11 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import axiosInstance from 'pages/login/LoginAxios';
+import { format } from 'date-fns'; // 날짜 포맷을 위한 라이브러리 추가
 
 const items = ['이벤트 등록', '진행중인 이벤트'];
-
+const cinemaOptions = ['Cgv', '롯데시네마', '메가박스']; // 예시 영화관 리스트
 const EventPost = () => {
   const [barcodeInput, setBarcodeInput] = useState<string>('');
   const [onePlusone, setOnePlusOne] = useState<boolean>(false);
@@ -16,6 +18,7 @@ const EventPost = () => {
   const [discountRate, setDiscountRate] = useState<number>(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [cinema, setCinema] = useState<string>(''); // cinema 상태 추가
 
   const handleBarcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBarcodeInput(e.target.value);
@@ -54,27 +57,28 @@ const EventPost = () => {
   const handleDiscountRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDiscountRate(parseInt(e.target.value));
   };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const eventData = {
-      barcode: barcodeInput,
-      eventType: onePlusone ? 'ONE_PLUS_ONE' : ticket ? 'MOVIE_GIVEAWAY' : 'DISCOUNT',
-      discountRate: discount ? discountRate : null,
-      startDate: startDate || null,
-      endDate: endDate || null,
-    };
-
-    console.log(eventData); // console
-
-    // try {
-    //   await axios.post('/api/events', eventData);
-    //   console.log('Event data submitted successfully');
-    // } catch (error) {
-    //   console.error('Error submitting event data:', error);
-    // }
+  const handleCinemaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCinema(e.target.value);
   };
+
+  const handleSubmit = async () => {
+    try {
+      const eventData = {
+        type: onePlusone ? 'ONE_PLUS_ONE' : ticket ? 'MOVIE_GIVEAWAY' : 'DISCOUNT',
+        productCode: barcodeInput,
+        discount: discount ? discountRate : null,
+        cinema: cinema ? cinema : null,
+        startDate: startDate ? format(startDate, 'yyyy-MM-dd') : null, // 날짜 포맷 변경
+        endDate: endDate ? format(endDate, 'yyyy-MM-dd') : null, // 날짜 포맷 변경
+      };
+      const response = await axiosInstance.post('/event', eventData);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+    alert('이벤트가 등록되었습니다.');
+  };
+
   return (
     <Container>
       <Menu items={items} page={'/event'}></Menu>
@@ -127,6 +131,19 @@ const EventPost = () => {
               />
             </Form.Group>
           )}
+          {ticket && (
+            <Form.Group className="mb-3">
+              <Form.Label>영화관 선택</Form.Label>
+              <Form.Control as="select" value={cinema} onChange={handleCinemaChange}>
+                <option value="">영화관을 선택하세요</option>
+                {cinemaOptions.map((cinema, index) => (
+                  <option key={index} value={cinema}>
+                    {cinema}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          )}
           <Form.Group className="mb-3">
             <Form.Label>시작 날짜</Form.Label>
             <DatePicker
@@ -146,7 +163,7 @@ const EventPost = () => {
               placeholderText="종료 날짜를 선택하세요"
             />
           </Form.Group>
-          <Button variant="primary" type="submit">
+          <Button variant="primary" type="submit" onClick={handleSubmit}>
             이벤트 등록
           </Button>
         </Form>
