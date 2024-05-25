@@ -8,9 +8,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axiosInstance from 'pages/login/LoginAxios';
 import { format } from 'date-fns'; // 날짜 포맷을 위한 라이브러리 추가
 
-const items = ['이벤트 등록', '진행중인 이벤트'];
-const cinemaOptions = ['Cgv', '롯데시네마', '메가박스']; // 예시 영화관 리스트
 const EventPost = () => {
+  const items = ['이벤트 등록', '진행중인 이벤트'];
+  const cinemaOptions = ['Cgv', '롯데시네마', '메가박스']; // 예시 영화관 리스트
   const [barcodeInput, setBarcodeInput] = useState<string>('');
   const [onePlusone, setOnePlusOne] = useState<boolean>(false);
   const [ticket, setTicket] = useState<boolean>(false);
@@ -81,9 +81,9 @@ const EventPost = () => {
 
   return (
     <Container>
-      <Menu items={items} page={'/event'}></Menu>
+      <Menu items={items} page={'event'} />
       <EventItem>
-        <Form onSubmit={handleSubmit}>
+        <Form>
           <Form.Group className="mb-3" controlId="formGroupEmail">
             <Form.Label>이벤트 대상 물품 바코드를 입력해주세요.</Form.Label>
             <Form.Control
@@ -163,7 +163,7 @@ const EventPost = () => {
               placeholderText="종료 날짜를 선택하세요"
             />
           </Form.Group>
-          <Button variant="primary" type="submit" onClick={handleSubmit}>
+          <Button variant="primary" type="button" onClick={handleSubmit}>
             이벤트 등록
           </Button>
         </Form>

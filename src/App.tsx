@@ -26,6 +26,8 @@ import PostList from './pages/etc/utility/PostList';
 import PostListDetail from './pages/etc/utility/PostListDetail';
 import EmployeePost from 'pages/employee/EmployeePost';
 import EmployeeDetail from 'pages/employee/EmployeDetail';
+import EventList from 'pages/events/EventList';
+import EventDetail from 'pages/events/EventDetail';
 function App() {
   return (
     <Router>
@@ -54,6 +56,8 @@ function App() {
         <Route path="/etc/Utility/2" element={<GasTax />} />
         <Route path="/etc/Lottery" element={<Lottery />} />
         <Route path="/event/0" element={<EventPost />} />
+        <Route path="/event/1" element={<EventList />} />
+        <Route path="/event/1/:eventId" element={<EventDetail />} />
       </Routes>
     </Router>
   );
