@@ -1,7 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Menu from 'components/Header/Menu';
-const asset = () => {
+import axiosInstance from 'pages/login/LoginAxios';
+
+const Asset = () => {
+  useEffect(() => {
+    const getAssets = async () => {
+      try {
+        const response = await axiosInstance.get(`/funds`);
+        console.log(response.data);
+        // setEmployee(response.data);
+        // setLoading(false);
+      } catch (error) {
+        // console.log(error);
+        // setLoading(false);
+      }
+    };
+    getAssets();
+  }, []);
   return (
     <Container>
       <Information>
@@ -18,7 +34,7 @@ const asset = () => {
   );
 };
 
-export default asset;
+export default Asset;
 const Container = styled.div`
   margin-top: 40px;
   display: grid;

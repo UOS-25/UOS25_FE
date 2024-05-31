@@ -5,20 +5,20 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
+import axiosInstance from 'pages/login/LoginAxios';
 
 interface depositInfo {
-  amount: number;
-  password: number;
-  account: number;
+  money: number;
+  password: string;
+  accountNumber: string;
   accountHolder: string;
-  bankBookCheck: boolean;
 }
 const ATM = () => {
   const items = ['입금', '출금', '예금'];
   const [deposit, setDeposit] = useState<depositInfo[]>([]);
   const [amountInput, setAmountInput] = useState<number>(0);
-  const [passwordInput, setPasswordInput] = useState<number>(0);
-  const [accountInput, setAccountInput] = useState<number>(0);
+  const [passwordInput, setPasswordInput] = useState<string>('');
+  const [accountInput, setAccountInput] = useState<string>('');
   const [accountHolderInput, setAccountHolderInput] = useState<string>('');
   const [bankBookCheckInput, setBankBookCheckInput] = useState<boolean>(false);
 
@@ -26,10 +26,10 @@ const ATM = () => {
     setAmountInput(parseInt(e.target.value));
   };
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordInput(parseInt(e.target.value));
+    setPasswordInput(e.target.value);
   };
   const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAccountInput(parseInt(e.target.value));
+    setAccountInput(e.target.value);
   };
   const handleAccountHolderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAccountHolderInput(e.target.value);
@@ -38,23 +38,28 @@ const ATM = () => {
     setBankBookCheckInput((prevState) => !prevState);
     console.log(bankBookCheckInput);
   };
-  const handleDeposit = () => {
-    const newDeposit: depositInfo = {
-      amount: amountInput,
-      password: passwordInput,
-      account: accountInput,
-      accountHolder: accountHolderInput,
-      bankBookCheck: bankBookCheckInput,
-    };
+  const handleDeposit = async () => {
     if (!bankBookCheckInput) {
       alert('통장이나 카드를 삽입해주세요!');
       console.log(deposit);
       return;
     }
-    setDeposit([...deposit, newDeposit]);
+    // setDeposit([...deposit, newDeposit]);
+    try {
+      const newDeposit: depositInfo = {
+        money: amountInput,
+        password: passwordInput,
+        accountNumber: accountInput,
+        accountHolder: accountHolderInput,
+      };
+      const response = await axiosInstance.post('/atm/deposit', newDeposit);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
     setAmountInput(0);
-    setPasswordInput(0);
-    setAccountInput(0);
+    setPasswordInput('');
+    setAccountInput('');
     setAccountHolderInput('');
     setBankBookCheckInput(false);
   };
@@ -106,7 +111,7 @@ const ATM = () => {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" onClick={handleDeposit}>
+        <Button variant="primary" type="button" onClick={handleDeposit}>
           입금
         </Button>
       </Form>

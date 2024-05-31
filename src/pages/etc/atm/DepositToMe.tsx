@@ -6,10 +6,9 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import axiosInstance from 'pages/login/LoginAxios';
 interface depositInfo {
   amount: number;
-
-  bankBookCheck: boolean;
 }
 const DepositToMe = () => {
   const items = ['입금', '출금', '예금'];
@@ -26,17 +25,21 @@ const DepositToMe = () => {
     setBankBookCheckInput((prevState) => !prevState);
     console.log(bankBookCheckInput);
   };
-  const handleDeposit = () => {
-    const newDeposit: depositInfo = {
-      amount: amountInput,
-      bankBookCheck: bankBookCheckInput,
-    };
+  const handleDeposit = async () => {
     if (!bankBookCheckInput) {
       alert('통장이나 카드를 삽입해주세요!');
       console.log(deposit);
       return;
     }
-    setDeposit([...deposit, newDeposit]);
+    try {
+      const newDeposit: depositInfo = {
+        amount: amountInput,
+      };
+      const response = await axiosInstance.post(`/atm/account/${amountInput}`);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
     setAmountInput(0);
     setBankBookCheckInput(false);
   };
@@ -63,7 +66,7 @@ const DepositToMe = () => {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" onClick={handleDeposit}>
+        <Button variant="primary" type="button" onClick={handleDeposit}>
           출금
         </Button>
       </Form>

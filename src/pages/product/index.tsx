@@ -1,47 +1,46 @@
 import Menu from 'components/Header/Menu';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import './product.css';
-import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import axiosInstance from 'pages/login/LoginAxios';
-interface product {
-  id: number;
-  name: string;
-  barcode: string;
+
+interface Product {
+  productName: string;
+  productCode: string;
+  salePrice: number;
+  orderPrice: number;
+}
+
+interface BalProduct extends Product {
   checked: boolean;
   count: number;
 }
 
-const handleSingup = async () => {
-  try {
-    // const token = localStorage.getItem('accessToken');
-    // console.log(token);
-    const response = await axiosInstance.post('/orders/save', {
-      orderNumber: '4',
-      productsMap: {
-        '123': 2,
-        '124': 3,
-        '125': 1
-      },
-    });
-    console.log(response.data);
-    // handleClick('/login');
-  } catch (error) {
-    console.log(error);
-    // setCode('');
-    // setLocation('');
-  }
-};
-
-const balItems: product[] = [];
-const initialItems: product[] = [
-  { id: 0, name: '물품1', barcode: '123123', checked: false, count: 0 },
-  { id: 1, name: '물품2', barcode: '123213', checked: false, count: 0 },
-];
 const Product = () => {
-  const [products, setProducts] = useState<product[]>(balItems);
-  const [onChecked, setOnChecked] = useState<boolean>(false);
+  const [products, setProducts] = useState<BalProduct[]>([]);
+  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  const [orderNumber, setOrderNumber] = useState<string>('');
+  const [inputProductCode, setInputProductCode] = useState<string>('');
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axiosInstance.get('/products/');
+        const productsWithDefaults = response.data.map((product: Product) => ({
+          ...product,
+          checked: false,
+          count: 0,
+        }));
+        setProducts(productsWithDefaults);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   const items = [
     '발주',
     '발주 확인',
@@ -52,73 +51,180 @@ const Product = () => {
     '제품 도난/파손',
   ];
 
-  const testClick = (index: number) => {
-    initialItems[index].checked = !initialItems[index].checked;
-    if (initialItems[index].checked) {
-      const newItem: product = {
-        id: initialItems[index].id,
-        name: initialItems[index].name,
-        barcode: initialItems[index].barcode,
-        checked: initialItems[index].checked,
-        count: 0,
-      };
-      setProducts([...products, newItem]);
-      console.log(products);
-    } else {
-      setProducts(products.filter((product) => product.id !== index));
+  const handleCheckboxChange = (productCode: string) => {
+    setCheckedItems((prevCheckedItems) => ({
+      ...prevCheckedItems,
+      [productCode]: !prevCheckedItems[productCode],
+    }));
+  };
+
+  const handleQuantityChange = (productCode: string, newQuantity: number) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [productCode]: newQuantity < 0 ? 0 : newQuantity,
+    }));
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputProductCode(e.target.value);
+  };
+
+  const addProduct = async () => {
+    try {
+      const response = await axiosInstance.get(`/products/${inputProductCode}`);
+      const product = response.data;
+      setProducts((prevProducts) => [...prevProducts, { ...product, checked: true, count: 1 }]);
+      setCheckedItems((prevCheckedItems) => ({
+        ...prevCheckedItems,
+        [product.productCode]: true,
+      }));
+      setQuantities((prevQuantities) => ({
+        ...prevQuantities,
+        [product.productCode]: 1,
+      }));
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  const handleQuantityChange = (index: number, newQuantity: number) => {
-    const updatedProducts = [...products];
-    if (newQuantity < 0) {
-      updatedProducts[index].count = 0;
-    } else updatedProducts[index].count = newQuantity;
-    setProducts(updatedProducts);
-    console.log(products);
+  const removeProduct = (productCode: string) => {
+    setProducts((prevProducts) =>
+      prevProducts.filter((product) => product.productCode !== productCode),
+    );
+    setCheckedItems((prevCheckedItems) => {
+      const updatedCheckedItems = { ...prevCheckedItems };
+      delete updatedCheckedItems[productCode];
+      return updatedCheckedItems;
+    });
+    setQuantities((prevQuantities) => {
+      const updatedQuantities = { ...prevQuantities };
+      delete updatedQuantities[productCode];
+      return updatedQuantities;
+    });
   };
+
+  const handleSubmit = async () => {
+    const productsMap = Object.keys(quantities)
+      .filter((productCode) => quantities[productCode] > 0)
+      .reduce(
+        (acc, productCode) => {
+          acc[productCode] = quantities[productCode];
+          return acc;
+        },
+        {} as { [key: string]: number },
+      );
+
+    const orderData = {
+      orderNumber,
+      productsMap,
+    };
+
+    try {
+      await axiosInstance.post('/orders/save', orderData);
+      alert('Order submitted successfully');
+    } catch (error) {
+      console.log(error);
+      alert('Failed to submit order');
+    }
+  };
+
+  const handleOrderNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOrderNumber(e.target.value);
+  };
+
+  const totalOrderPrice = products
+    .filter((product) => checkedItems[product.productCode])
+    .reduce((acc, product) => acc + (quantities[product.productCode] || 0) * product.salePrice, 0);
 
   return (
     <Container>
       <Menu items={items} page="product"></Menu>
+      <div>
+        <input
+          type="text"
+          value={inputProductCode}
+          onChange={handleInputChange}
+          placeholder="Enter product code"
+        />
+        <Button variant="primary" onClick={addProduct}>
+          Add Product
+        </Button>
+      </div>
+      <div>
+        <input
+          type="text"
+          value={orderNumber}
+          onChange={handleOrderNumberChange}
+          placeholder="Enter order number"
+        />
+      </div>
       <ProductContainer>
-        {initialItems.map((item) => (
-          <ItemContainer key={item.id}>
+        {products.map((item, index) => (
+          <ItemContainer key={item.productCode}>
             <ItemBox>
               <CheckItem>
-                <input type="checkbox" id={`item-${item.id}`} onChange={() => testClick(item.id)} />
-                <div>{item.name}</div>
+                <input
+                  type="checkbox"
+                  id={`item-${item.productCode}`}
+                  checked={checkedItems[item.productCode] || false}
+                  onChange={() => handleCheckboxChange(item.productCode)}
+                />
+                <div>{item.productName}</div>
               </CheckItem>
-              <div>{item.barcode}</div>
+              <div>{item.productCode}</div>
             </ItemBox>
           </ItemContainer>
         ))}
       </ProductContainer>
       <ProductsContainer>
-        {products.map((products, index) => (
-          <ProductItem key={index}>
-            <Barcode>{products.barcode}</Barcode>
-            <ProductName>{products.name}</ProductName>
-            <span>
-              <QuantityButton onClick={() => handleQuantityChange(index, products.count - 1)}>
-                -
-              </QuantityButton>
-              <ProductName>{products.count}</ProductName>
-              <QuantityButton onClick={() => handleQuantityChange(index, products.count + 1)}>
-                +
-              </QuantityButton>
-            </span>
-          </ProductItem>
-        ))}
+        {products
+          .filter((product) => checkedItems[product.productCode])
+          .map((product) => (
+            <ProductItem key={product.productCode}>
+              <Barcode>{product.productCode}</Barcode>
+              <ProductName>{product.productName}</ProductName>
+              <span>
+                <QuantityButton
+                  onClick={() =>
+                    handleQuantityChange(
+                      product.productCode,
+                      (quantities[product.productCode] || 0) - 1,
+                    )
+                  }
+                >
+                  -
+                </QuantityButton>
+                <ProductName>{(quantities[product.productCode] || 0).toString()}</ProductName>
+                <QuantityButton
+                  onClick={() =>
+                    handleQuantityChange(
+                      product.productCode,
+                      (quantities[product.productCode] || 0) + 1,
+                    )
+                  }
+                >
+                  +
+                </QuantityButton>
+                <Button variant="danger" onClick={() => removeProduct(product.productCode)}>
+                  삭제
+                </Button>
+              </span>
+              <div>Price: {product.salePrice}</div>
+              <div>
+                Total: {((quantities[product.productCode] || 0) * product.salePrice).toString()}
+              </div>
+            </ProductItem>
+          ))}
       </ProductsContainer>
       <ButtonContainer>
-        <Button variant="primary" onClick={handleSingup} size="lg">
+        <Button variant="primary" size="lg" onClick={handleSubmit}>
           발주
         </Button>{' '}
-        <Button variant="secondary" type="submit" size="lg">
+        <Button variant="secondary" size="lg" onClick={() => window.location.reload()}>
           초기화
         </Button>
       </ButtonContainer>
+      <TotalPriceContainer>Total Order Price: {totalOrderPrice.toString()}</TotalPriceContainer>
     </Container>
   );
 };
@@ -151,9 +257,8 @@ const ItemBox = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  flex: 1; // 균등한 크기
-  margin: 0 10px; // 좌우 마진 설정
-}
+  flex: 1;
+  margin: 0 10px;
 `;
 
 const CheckItem = styled.div`
@@ -164,7 +269,7 @@ const CheckItem = styled.div`
 const ProductsContainer = styled.div`
   margin-top: 10px;
   margin-left: 30px;
-  width: 30%;
+  width: 80%;
   max-height: 605px;
   overflow-y: auto;
   border: 1px solid #ccc;
@@ -173,29 +278,29 @@ const ProductsContainer = styled.div`
 
 const ProductItem = styled.div`
   display: flex;
-  justify-content: space-between; // 각 항목이 공간을 균등하게 차지하도록 조정
+  justify-content: space-between;
   align-items: center;
-  width: 100%; // 부모 컨테이너의 너비를 100%로 설정하여 꽉 차게 만듦
+  width: 100%;
   padding: 10px;
-  box-sizing: border-box; // 패딩 포함 너비 계산
+  box-sizing: border-box;
 `;
 
 const Barcode = styled.span`
   padding: 5px 10px;
   border-radius: 5px 0 0 5px;
-  max-width: 100px; /* 최대 너비 설정 */
-  overflow: hidden; /* 넘치는 내용 숨김 */
-  text-overflow: ellipsis; /* 넘치는 텍스트를 '...'로 표시 */
-  white-space: nowrap; /* 텍스트가 한 줄로 나오도록 설정 */
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const ProductName = styled.span`
   padding: 5px 10px;
   border-radius: 5px 0 0 5px;
-  max-width: 100px; /* 최대 너비 설정 */
-  overflow: hidden; /* 넘치는 내용 숨김 */
-  text-overflow: ellipsis; /* 넘치는 텍스트를 '...'로 표시 */
-  white-space: nowrap; /* 텍스트가 한 줄로 나오도록 설정 */
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const QuantityButton = styled.button`
@@ -210,4 +315,10 @@ const QuantityButton = styled.button`
 const ButtonContainer = styled.div`
   margin-left: 55px;
   margin-top: 20px;
+`;
+
+const TotalPriceContainer = styled.div`
+  margin-top: 20px;
+  margin-left: 210px;
+  font-size: 1;
 `;

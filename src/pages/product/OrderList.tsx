@@ -39,16 +39,16 @@ const Order = () => {
   return (
     <Container>
       <Menu items={items} page={'product'} />
-      <ParcelList>
+      <OrderList>
         {orderList.map((item) => (
-          <ParcelItem key={item.orderNumber}>
+          <OrderItem key={item.orderNumber}>
             <StyledLink to={`/product/1/${item.orderNumber}`}>
-              <ParcelId>발주 번호: {item.orderNumber}</ParcelId>
-              <PhoneNumber>발주 일자: {item.orderDate}</PhoneNumber>
+              <OrderId>발주 번호: {item.orderNumber}</OrderId>
+              <OrderDate>발주 일자: {item.orderDate}</OrderDate>
             </StyledLink>
-          </ParcelItem>
+          </OrderItem>
         ))}
-      </ParcelList>
+      </OrderList>
     </Container>
   );
 };
@@ -63,14 +63,14 @@ const Container = styled.div`
   margin-left: 180px;
 `;
 
-const ParcelList = styled.ul`
+const OrderList = styled.ul`
   width: 80%;
   padding: 0;
   list-style: none;
   margin-top: 20px;
 `;
 
-const ParcelItem = styled.li`
+const OrderItem = styled.li`
   margin: 10px 0;
   padding: 15px;
   border: 1px solid #ccc;
@@ -87,12 +87,12 @@ const StyledLink = styled(Link)`
   width: 100%;
 `;
 
-const ParcelId = styled.div`
+const OrderId = styled.div`
   font-size: 16px;
   font-weight: bold;
 `;
 
-const PhoneNumber = styled.div`
+const OrderDate = styled.div`
   font-size: 14px;
   color: #555;
   margin-top: 5px;
