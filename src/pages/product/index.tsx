@@ -150,15 +150,15 @@ const Product = () => {
           Add Product
         </Button>
       </div>
-      <div>
-        <input
-          type="text"
-          value={orderNumber}
-          onChange={handleOrderNumberChange}
-          placeholder="Enter order number"
-        />
-      </div>
       <ProductContainer>
+        <div>
+          <input
+            type="text"
+            value={orderNumber}
+            onChange={handleOrderNumberChange}
+            placeholder="Enter order number"
+          />
+        </div>
         {products.map((item, index) => (
           <ItemContainer key={item.productCode}>
             <ItemBox>
@@ -237,13 +237,15 @@ const Container = styled.div`
 `;
 
 const ProductContainer = styled.div`
+  display: flex;
   margin-top: 10px;
-  margin-left: 210px;
-  width: 20%;
+  margin-left: 70px;
+  width: 50%;
   max-height: 605px;
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
+  align-items: center;
 `;
 
 const ItemContainer = styled.div`

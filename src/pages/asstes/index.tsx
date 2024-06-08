@@ -3,12 +3,22 @@ import styled from 'styled-components';
 import Menu from 'components/Header/Menu';
 import axiosInstance from 'pages/login/LoginAxios';
 
+type assetType = {
+  headPayment: number;
+  maintenanceExpense: number;
+  personalExpense: number;
+  sales: number;
+  totalFunds: number;
+};
+
 const Asset = () => {
+  const [assets, setAssets] = useState<assetType>(null);
   useEffect(() => {
     const getAssets = async () => {
       try {
         const response = await axiosInstance.get(`/funds`);
         console.log(response.data);
+        setAssets(response.data);
         // setEmployee(response.data);
         // setLoading(false);
       } catch (error) {
@@ -18,18 +28,37 @@ const Asset = () => {
     };
     getAssets();
   }, []);
+  if (!assets) {
+    return <div>Loading...</div>;
+  }
   return (
     <Container>
       <Information>
         <InformationRow>매출</InformationRow>
-        <div>asdf</div>
+        <div>{assets.sales}원</div>
       </Information>
-      <InformationRow>본사 납입금</InformationRow>
-      <InformationRow>물건값</InformationRow>
-      <InformationRow>인건비</InformationRow>
-      <InformationRow>유지비</InformationRow>
-      <InformationRow>수익금</InformationRow>
-      <Button>sd</Button>
+      <Information>
+        <InformationRow>본사 납입금</InformationRow>
+        <div>{assets.headPayment}원</div>
+      </Information>
+      <Information>
+        <InformationRow>물건값</InformationRow>
+        <div>{assets.sales}원</div>
+      </Information>
+      <Information>
+        <InformationRow>인건비</InformationRow>
+        <div>{assets.personalExpense}원</div>
+      </Information>
+      <Information>
+        <InformationRow>유지비</InformationRow>
+        <div>{assets.maintenanceExpense}원</div>
+      </Information>
+      <Information>
+        <InformationRow>수익금</InformationRow>
+        <div>{assets.totalFunds}원</div>
+      </Information>
+
+      {/* <Button>sd</Button> */}
     </Container>
   );
 };

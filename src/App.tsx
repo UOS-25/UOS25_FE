@@ -28,6 +28,7 @@ import EmployeePost from 'pages/employee/EmployeePost';
 import EmployeeDetail from 'pages/employee/EmployeDetail';
 import EventList from 'pages/events/EventList';
 import EventDetail from 'pages/events/EventDetail';
+import Stock from 'pages/product/Stock';
 function App() {
   return (
     <Router>
@@ -39,6 +40,7 @@ function App() {
         <Route path="/product/0" element={<Order />} />
         <Route path="/product/1" element={<OrderList />} />
         <Route path="/product/1/:orderNumber" element={<OrderListDetail />} />
+        <Route path="/product/4" element={<Stock />} />
         <Route path="/sell" element={<Sell />} />
         <Route path="/employee/0" element={<Employee />} />
         <Route path="/employee/1" element={<EmployeePost />} />
