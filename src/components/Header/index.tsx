@@ -9,9 +9,8 @@ const Header = () => {
       <Container>
         <LogoContainer to="/">
           <LogoImage src={emblem} alt="emblem" />
-          <h1>UOS25</h1>
+          <h1 style={{ paddingTop: '25px' }}>UOS25</h1>
         </LogoContainer>
-        <WelcomeMessage>000님 환영합니다</WelcomeMessage>
       </Container>
       <Separator />
     </HeaderContainer>
@@ -21,6 +20,7 @@ const Header = () => {
 export default Header;
 
 const HeaderContainer = styled.div`
+  font-family: 'Noto Sans KR', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;

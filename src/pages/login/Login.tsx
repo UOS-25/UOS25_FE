@@ -1,7 +1,7 @@
 import axiosInstance from './LoginAxios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import styled from 'styled-components';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -21,6 +21,7 @@ const LoginPage = () => {
       navigate('/');
     } catch (error) {
       if (error.response) {
+        alert('등록되지 않은 코드입니다.');
         // 서버가 4xx 혹은 5xx 응답을 반환한 경우
         console.error('Error response:', error.response.data);
       } else if (error.request) {
@@ -34,19 +35,77 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <input
-        type="password"
-        placeholder="Code"
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
-      />
-
-      <button onClick={handleLogin}>Login</button>
-      <button onClick={() => handleClick('/login/signup')}>Signup</button>
-    </div>
+    <Container>
+      <LoginBox>
+        <Title>Login</Title>
+        <Input
+          type="password"
+          placeholder="Code"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+        />
+        <Input type="password" placeholder="password" />
+        <Button onClick={handleLogin}>Login</Button>
+        <SignupButton onClick={() => handleClick('/login/signup')}>Signup</SignupButton>
+      </LoginBox>
+    </Container>
   );
 };
 
 export default LoginPage;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+`;
+
+const LoginBox = styled.div`
+  width: 400px;
+  padding: 40px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-align: center;
+`;
+
+const Title = styled.h1`
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 10px;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const SignupButton = styled(Button)`
+  background-color: #6c757d;
+
+  &:hover {
+    background-color: #5a6268;
+  }
+`;

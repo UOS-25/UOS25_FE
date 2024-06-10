@@ -29,6 +29,10 @@ import EmployeeDetail from 'pages/employee/EmployeDetail';
 import EventList from 'pages/events/EventList';
 import EventDetail from 'pages/events/EventDetail';
 import Stock from 'pages/product/Stock';
+import LotteryPost from 'pages/etc/LotteryPost';
+import Receipt from 'pages/sell/Receipt';
+import ReceiptDetail from 'pages/sell/ReceiptDetail';
+import Loss from 'pages/product/Loss';
 function App() {
   return (
     <Router>
@@ -40,8 +44,11 @@ function App() {
         <Route path="/product/0" element={<Order />} />
         <Route path="/product/1" element={<OrderList />} />
         <Route path="/product/1/:orderNumber" element={<OrderListDetail />} />
-        <Route path="/product/4" element={<Stock />} />
-        <Route path="/sell" element={<Sell />} />
+        <Route path="/product/2" element={<Stock />} />
+        <Route path="product/3" element={<Loss />} />
+        <Route path="/sell/0" element={<Sell />} />
+        <Route path="/sell/1" element={<Receipt />} />
+        <Route path="/sell/receipt/:receiptNumber" element={<ReceiptDetail />} />
         <Route path="/employee/0" element={<Employee />} />
         <Route path="/employee/1" element={<EmployeePost />} />
         <Route path="/employee/0/:employeeId" element={<EmployeeDetail />} />
@@ -56,7 +63,8 @@ function App() {
         <Route path="/etc/Utility/0" element={<WaterTex />} />
         <Route path="/etc/Utility/1" element={<ElectricTax />} />
         <Route path="/etc/Utility/2" element={<GasTax />} />
-        <Route path="/etc/Lottery" element={<Lottery />} />
+        <Route path="/etc/Lottery/0" element={<Lottery />} />
+        <Route path="/etc/Lottery/1" element={<LotteryPost />} />
         <Route path="/event/0" element={<EventPost />} />
         <Route path="/event/1" element={<EventList />} />
         <Route path="/event/1/:eventId" element={<EventDetail />} />

@@ -41,15 +41,7 @@ const Product = () => {
     fetchProducts();
   }, []);
 
-  const items = [
-    '발주',
-    '발주 확인',
-    '입고 관리',
-    '출고 관리',
-    '재고 관리',
-    '폐기 제품',
-    '제품 도난/파손',
-  ];
+  const items = ['발주', '발주 확인', '재고 관리', '폐기 제품 등록'];
 
   const handleCheckboxChange = (productCode: string) => {
     setCheckedItems((prevCheckedItems) => ({
@@ -108,7 +100,10 @@ const Product = () => {
       .filter((productCode) => quantities[productCode] > 0)
       .reduce(
         (acc, productCode) => {
-          acc[productCode] = quantities[productCode];
+          const product = products.find((item) => item.productCode === productCode);
+          if (product) {
+            acc[product.productCode] = quantities[productCode];
+          }
           return acc;
         },
         {} as { [key: string]: number },
@@ -120,6 +115,7 @@ const Product = () => {
     };
 
     try {
+      console.log(orderData);
       await axiosInstance.post('/orders/save', orderData);
       alert('Order submitted successfully');
     } catch (error) {
@@ -127,7 +123,6 @@ const Product = () => {
       alert('Failed to submit order');
     }
   };
-
   const handleOrderNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOrderNumber(e.target.value);
   };
@@ -139,8 +134,8 @@ const Product = () => {
   return (
     <Container>
       <Menu items={items} page="product"></Menu>
-      <div>
-        <input
+      <TopContainer>
+        {/* <input
           type="text"
           value={inputProductCode}
           onChange={handleInputChange}
@@ -148,18 +143,18 @@ const Product = () => {
         />
         <Button variant="primary" onClick={addProduct}>
           Add Product
-        </Button>
-      </div>
+        </Button> */}
+      </TopContainer>
       <ProductContainer>
-        <div>
+        <OrderInputContainer>
           <input
             type="text"
             value={orderNumber}
             onChange={handleOrderNumberChange}
             placeholder="Enter order number"
           />
-        </div>
-        {products.map((item, index) => (
+        </OrderInputContainer>
+        {products.map((item) => (
           <ItemContainer key={item.productCode}>
             <ItemBox>
               <CheckItem>
@@ -224,7 +219,7 @@ const Product = () => {
           초기화
         </Button>
       </ButtonContainer>
-      <TotalPriceContainer>Total Order Price: {totalOrderPrice.toString()}</TotalPriceContainer>
+      <TotalPriceContainer>발주 가격: {totalOrderPrice.toString()}원</TotalPriceContainer>
     </Container>
   );
 };
@@ -233,19 +228,36 @@ export default Product;
 
 const Container = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  padding: 20px;
+`;
+
+const TopContainer = styled.div`
+  margin-left: 200px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
 `;
 
 const ProductContainer = styled.div`
+  margin-left: 500px;
   display: flex;
+  flex-direction: column;
   margin-top: 10px;
-  margin-left: 70px;
+  margin-left: 250px;
   width: 50%;
   max-height: 605px;
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
   align-items: center;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+`;
+
+const OrderInputContainer = styled.div`
+  margin-bottom: 20px;
 `;
 
 const ItemContainer = styled.div`
@@ -266,16 +278,20 @@ const ItemBox = styled.div`
 const CheckItem = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: 10px;
 `;
 
 const ProductsContainer = styled.div`
   margin-top: 10px;
-  margin-left: 30px;
-  width: 80%;
+  margin-left: 250px;
+  width: 50%;
   max-height: 605px;
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
 `;
 
 const ProductItem = styled.div`
@@ -285,42 +301,55 @@ const ProductItem = styled.div`
   width: 100%;
   padding: 10px;
   box-sizing: border-box;
+  border-bottom: 1px solid #ccc;
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 const Barcode = styled.span`
   padding: 5px 10px;
-  border-radius: 5px 0 0 5px;
+  border-radius: 5px;
   max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  background-color: #e0e0e0;
 `;
 
 const ProductName = styled.span`
   padding: 5px 10px;
-  border-radius: 5px 0 0 5px;
+  border-radius: 5px;
   max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  background-color: #e0e0e0;
 `;
 
 const QuantityButton = styled.button`
-  padding: 5px;
-  background-color: #f44336;
+  margin: 0px 10px;
+  padding: 5px 10px;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
 
 const ButtonContainer = styled.div`
-  margin-left: 55px;
+  margin-left: 250px;
   margin-top: 20px;
+  display: flex;
+  gap: 20px;
 `;
 
 const TotalPriceContainer = styled.div`
+  margin-left: 250px;
   margin-top: 20px;
-  margin-left: 210px;
-  font-size: 1;
+  font-size: 1.2em;
+  font-weight: bold;
 `;

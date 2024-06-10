@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 interface eventInfo {
   eventId: number;
-  type: 'string';
+  type: 'ONE_PLUS_ONE' | 'MOVIE_GIVEAWAY' | 'DISCOUNT';
   productName: 'string';
   discount: number;
 }
@@ -20,13 +20,30 @@ const EventList = () => {
       try {
         const response = await axiosInstance.get(`/event/events`);
         console.log(response.data);
-        setEventData(response.data.responses);
+        const transformedData = response.data.responses.map((item: eventInfo) => ({
+          ...item,
+          type: parseEventType(item.type),
+        }));
+        setEventData(transformedData);
       } catch (error) {
         console.log(error);
       }
     };
     getParcel();
   }, []);
+
+  const parseEventType = (type: string): string => {
+    switch (type) {
+      case 'ONE_PLUS_ONE':
+        return '1+1';
+      case 'MOVIE_GIVEAWAY':
+        return '영화권 증정';
+      case 'DISCOUNT':
+        return '할인';
+      default:
+        return type;
+    }
+  };
 
   return (
     <Container>

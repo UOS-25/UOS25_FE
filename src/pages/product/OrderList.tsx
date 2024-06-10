@@ -11,15 +11,7 @@ interface order {
   orderNumber: string;
 }
 const Order = () => {
-  const items: string[] = [
-    '발주',
-    '발주 확인',
-    '입고 관리',
-    '출고 관리',
-    '재고 관리',
-    '폐기 제품',
-    '제품 도난/파손',
-  ];
+  const items = ['발주', '발주 확인', '재고 관리', '폐기 제품 등록'];
 
   const [orderList, setOrderList] = useState<order[]>([]);
   useEffect(() => {

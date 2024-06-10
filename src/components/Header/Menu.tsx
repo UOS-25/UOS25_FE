@@ -29,7 +29,7 @@ const Menu = ({ items, page }: Props) => {
 
 const Container = styled.div`
   position: fixed;
-  top: 81px; /* 헤더의 높이에 맞게 조절 */
+  top: 92px; /* 헤더의 높이에 맞게 조절 */
   bottom: 0;
   left: 0;
   width: 200px;

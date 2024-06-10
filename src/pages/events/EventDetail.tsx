@@ -22,7 +22,9 @@ const EventDetail = () => {
     productName: '',
     discount: 0,
   });
+  const [parsedType, setParsedType] = useState('');
   const navigate = useNavigate();
+
   useEffect(() => {
     const getEvent = async () => {
       try {
@@ -36,6 +38,24 @@ const EventDetail = () => {
     };
     getEvent();
   }, [eventId]);
+
+  useEffect(() => {
+    let typeString = '';
+    switch (event.type) {
+      case 'ONE_PLUS_ONE':
+        typeString = '1+1';
+        break;
+      case 'MOVIE_GIVEAWAY':
+        typeString = '영화권 증정';
+        break;
+      case 'DISCOUNT':
+        typeString = '할인';
+        break;
+      default:
+        typeString = event.type;
+    }
+    setParsedType(typeString);
+  }, [event.type]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -65,8 +85,6 @@ const EventDetail = () => {
   }
 
   if (!event.eventId) {
-    console.log(event.eventId);
-    console.log(eventId);
     return <div>No event data found.</div>;
   }
 
@@ -75,15 +93,15 @@ const EventDetail = () => {
       <Menu items={items} page={'event'} />
       <InformationRow>
         이벤트 제품
-        <Input name="type" value={event.productName} onChange={handleInputChange} />
+        <Input name="productName" value={event.productName} onChange={handleInputChange} />
       </InformationRow>
       <InformationRow>
         이벤트 종류
-        <Input name="gender" value={event.type} onChange={handleInputChange} />
+        <Input name="type" value={parsedType} readOnly />
       </InformationRow>
       <InformationRow>
         할인율
-        <Input name="review" value={event.discount} onChange={handleInputChange} />
+        <Input name="discount" value={event.discount} onChange={handleInputChange} />
       </InformationRow>
 
       <ButtonContainer>

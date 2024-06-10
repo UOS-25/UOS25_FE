@@ -14,7 +14,7 @@ const Etc = () => {
       <Button onClick={() => handleClick('/etc/Post/0')}>택배 접수</Button>
       <Button onClick={() => handleClick('/etc/ATM/0')}>ATM</Button>
       <Button onClick={() => handleClick('/etc/Utility/0')}>공공요금 납부</Button>
-      <Button onClick={() => handleClick('/etc/Lottery')}>롯또복권</Button>
+      <Button onClick={() => handleClick('/etc/Lottery/0')}>롯또복권</Button>
     </ButtonGrid>
   );
 };

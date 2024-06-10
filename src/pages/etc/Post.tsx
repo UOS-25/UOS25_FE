@@ -32,7 +32,7 @@ const Post = () => {
     setFromAddressInput(e.target.value);
   };
   const handleToAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFromAddressInput(e.target.value);
+    setToAddressInput(e.target.value);
   };
   const handletoPhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     settoPhoneNumberInput(e.target.value);
@@ -56,7 +56,7 @@ const Post = () => {
   const handleAddProduct = async () => {
     try {
       const newProduct: Product = {
-        fromAddress: fromAddressInput,
+        fromAddress: fromAdndressInput,
         toAddress: toAddressInput,
         toPhoneNumber: toPhoneNumberInput,
         fromPhoneNumber: fromPhoneNumberInput,
@@ -65,6 +65,7 @@ const Post = () => {
         // senderName: senderNameInput,
         // recipientName: recipientNameInput,
       };
+      console.log(newProduct);
       const response = await axiosInstance.post('/parcel', newProduct);
       console.log(response.data);
     } catch (error) {

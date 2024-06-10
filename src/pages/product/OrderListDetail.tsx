@@ -5,18 +5,32 @@ import axiosInstance from '../login/LoginAxios';
 import Menu from 'components/Header/Menu';
 
 const OrderListDetail = () => {
-  const items: string[] = [
-    '발주',
-    '발주 확인',
-    '입고 관리',
-    '출고 관리',
-    '재고 관리',
-    '폐기 제품',
-    '제품 도난/파손',
-  ];
+  const items = ['발주', '발주 확인', '재고 관리', '폐기 제품 등록'];
+
   const { orderNumber } = useParams();
   const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState([]);
+
+  const handleConfirm = async (orderNumber, productCode, orderDate) => {
+    try {
+      // const response = await axiosInstance.post(`/stocks/save`, {
+      //   productCode: 'P002',
+      //   counts: 0,
+      // });
+      const response = await axiosInstance.post(
+        `/orders/confirm?orderNumber=${orderNumber}&productCode=${productCode}&confirm=true&orderDate=${orderDate}`,
+      );
+      console.log(response.data);
+      alert('입고 확인');
+    } catch (error) {
+      console.log(error);
+      alert('입고 확인 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleNotReceived = () => {
+    alert('본사에 전달합니다.');
+  };
 
   useEffect(() => {
     const getOrder = async () => {
@@ -38,17 +52,13 @@ const OrderListDetail = () => {
     const orderMap = {};
 
     orders.forEach((order) => {
-      const { orderNumber, productCode } = order;
+      const { orderNumber, productCode, counts, orderDate } = order;
 
       if (!orderMap[orderNumber]) {
-        orderMap[orderNumber] = {};
+        orderMap[orderNumber] = [];
       }
 
-      if (!orderMap[orderNumber][productCode]) {
-        orderMap[orderNumber][productCode] = 0;
-      }
-
-      orderMap[orderNumber][productCode] += 1;
+      orderMap[orderNumber].push({ productCode, quantity: counts, orderDate });
     });
 
     return orderMap;
@@ -58,9 +68,17 @@ const OrderListDetail = () => {
     return Object.keys(orders).map((orderNumber) => (
       <OrderItem key={orderNumber}>
         <OrderId>발주 번호: {orderNumber}</OrderId>
-        {Object.keys(orders[orderNumber]).map((productCode) => (
-          <ProductContainer key={productCode}>
-            바코드: {productCode} 수량: {orders[orderNumber][productCode]}
+        {orders[orderNumber].map((item, index) => (
+          <ProductContainer key={index}>
+            바코드: {item.productCode} 수량: {item.quantity}
+            <ButtonContainer>
+              <ConfirmButton
+                onClick={() => handleConfirm(orderNumber, item.productCode, item.orderDate)}
+              >
+                확인 완료
+              </ConfirmButton>
+              <NotReceivedButton onClick={() => handleNotReceived()}>미수령</NotReceivedButton>
+            </ButtonContainer>
           </ProductContainer>
         ))}
       </OrderItem>
@@ -117,6 +135,30 @@ const ProductContainer = styled.div`
   font-size: 14px;
   color: #555;
   margin-top: 5px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  margin-top: 10px;
+`;
+
+const ConfirmButton = styled.button`
+  margin-right: 10px;
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+`;
+
+const NotReceivedButton = styled.button`
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
 `;
 
 const LoadingText = styled.h2`

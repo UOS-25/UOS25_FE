@@ -73,10 +73,10 @@ const EventPost = () => {
       };
       const response = await axiosInstance.post('/event', eventData);
       console.log(response.data);
+      alert('이벤트가 등록되었습니다.');
     } catch (error) {
       console.log(error);
     }
-    alert('이벤트가 등록되었습니다.');
   };
 
   return (

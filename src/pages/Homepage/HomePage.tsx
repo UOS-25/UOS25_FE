@@ -24,20 +24,24 @@ const HomePage = () => {
   // 버튼 클릭때마다 post 필요
   return (
     <ButtonGrid>
-      <Button onClick={() => handleClick('/product/0')}>제품 관리</Button>
-      <button
-        type="button"
-        className="btn btn-outline-primary"
-        onClick={() => handleClick('/sell')}
-      >
-        판매 관리
-      </button>
-      <Button variant="secondary" onClick={() => handleClick('/asset')}>
-        자산 관리
+      <Button onClick={() => handleClick('/product/0')}>
+        <Text>제품 관리</Text>
       </Button>
-      <Button onClick={() => handleClick('/event/0')}>이벤트 관리</Button>
-      <Button onClick={() => handleClick('/employee/0')}>직원 관리</Button>
-      <Button onClick={() => handleClick('/etc')}>기타 관리</Button>
+      <Button onClick={() => handleClick('/sell/0')}>
+        <Text>판매 관리</Text>
+      </Button>
+      <Button onClick={() => handleClick('/asset')}>
+        <Text>자산 관리</Text>
+      </Button>
+      <Button onClick={() => handleClick('/event/0')}>
+        <Text>이벤트 관리</Text>
+      </Button>
+      <Button onClick={() => handleClick('/employee/0')}>
+        <Text>직원 관리</Text>
+      </Button>
+      <Button onClick={() => handleClick('/etc')}>
+        <Text>기타 관리</Text>
+      </Button>
     </ButtonGrid>
   );
 };
@@ -51,4 +55,9 @@ const ButtonGrid = styled.div`
   grid-gap: 20px;
   width: 95%;
   height: 600px;
+`;
+
+const Text = styled.div`
+  font-family: sans-serif;
+  font-size: 40px;
 `;

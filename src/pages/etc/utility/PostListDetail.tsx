@@ -38,6 +38,7 @@ const PostListDetail = () => {
     const getParcel = async () => {
       try {
         const response = await axiosInstance.get(`/parcel/${parcelId}`);
+        console.log(response.data);
         setParcel(response.data);
         setLoading(false); // 데이터 로딩 완료 후 로딩 상태를 false로 설정
       } catch (error) {
